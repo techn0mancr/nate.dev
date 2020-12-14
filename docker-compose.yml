@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  
+  flask:
+    build:
+      context: ./flask
+      dockerfile: flask.Dockerfile
+    image: flask:nate.dev
+    container_name: flask
+    volumes:
+      - type: bind
+        source: ./flask
+        target: /home/nate.dev
+    expose:
+      - "8080"
+  
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: nginx.Dockerfile
+    image: nginx:nate.dev
+    container_name: nginx
+    ports:
+      - "80:80"
