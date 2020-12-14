@@ -2,7 +2,7 @@ from flask import render_template
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 
-from application.instances.secrets import GITHUB_TOKEN
+from application.instances.secrets import GITHUB_USERNAME, GITHUB_TOKEN
 
 from application import app
 
@@ -16,7 +16,7 @@ def projects():
                      remaining
                      resetAt
                    }
-                   user(login: "sheep5") {
+                   user(login: "techn0mancr") {
                      repositories(first: 100, privacy: PUBLIC, orderBy: {field: CREATED_AT, direction: DESC}) {
                        totalCount
                        nodes {
