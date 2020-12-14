@@ -1,0 +1,4 @@
+Flask
+gql
+markdown
+uwsgi
