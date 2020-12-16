@@ -19,7 +19,14 @@ def projects() -> None:
                             resetAt
                           }}
                           user(login: "{GITHUB_USERNAME}") {{
-                            repositories(first: 100, privacy: PUBLIC, orderBy: {{field: CREATED_AT, direction: DESC}}) {{
+                            repositories(
+                              first: 100,
+                              privacy: PUBLIC,
+                              orderBy: {{
+                                field: CREATED_AT,
+                                direction: DESC
+                              }}
+                            ) {{
                               totalCount
                               nodes {{
                                 name
@@ -32,8 +39,13 @@ def projects() -> None:
                         """
                  )
     
-    projects : Dict = result["user"]["repositories"]["nodes"]
-    return render_template("projects.html", projects=projects)
+    try:
+        projects : Dict = result["user"]["repositories"]["nodes"]
+        return render_template("projects.html", projects=projects)
+    except (AttributeError, KeyError):
+        # code to show user an error
+        pass
+
 
 """ Queries the given query string to Github's API v4. """
 def queryGithub(query : str) -> Dict:
@@ -46,7 +58,7 @@ def queryGithub(query : str) -> Dict:
                                             url="https://api.github.com/graphql",
                                             use_json=True,
                                             headers={
-                                                "Authorization": "token " + GITHUB_TOKEN
+                                                "Authorization": f"token {GITHUB_TOKEN}"
                                             }
                                         )
     
