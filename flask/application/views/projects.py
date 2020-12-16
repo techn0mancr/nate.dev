@@ -1,3 +1,5 @@
+from typing import Dict
+
 from flask import render_template
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
@@ -7,7 +9,8 @@ from application.instances.secrets import GITHUB_USERNAME, GITHUB_TOKEN
 from application import app
 
 @app.route("/projects")
-def projects():
+def projects() -> None:
+    result : Dict = queryGithub
     result = queryGithub(
                  """
                  query getPublicRepos {
@@ -29,32 +32,32 @@ def projects():
                  }
                  """
              )
-    projects = result["user"]["repositories"]["nodes"]
+    projects : Dict = result["user"]["repositories"]["nodes"]
     return render_template("projects.html", projects=projects)
 
 """ Queries the given query string to Github's API v4. """
-def queryGithub(query):
+def queryGithub(query : str) -> Dict:
     if type(query) != str:
         #TODO: error checking
         pass
     
     # Select transport with defined URL endpoint
-    transport = RequestsHTTPTransport(
-                    url="https://api.github.com/graphql",
-                    use_json=True,
-                    headers={
-                        "Authorization": "token " + GITHUB_TOKEN
-                    }
-                )
+    transport : RequestsHTTPTransport = RequestsHTTPTransport(
+                                            url="https://api.github.com/graphql",
+                                            use_json=True,
+                                            headers={
+                                                "Authorization": "token " + GITHUB_TOKEN
+                                            }
+                                        )
     
     # Create GraphQL client using defined transport
-    client = Client(
-                 transport=transport,
-                 fetch_schema_from_transport=True
-             )
+    client : Client = Client(
+                          transport=transport,
+                          fetch_schema_from_transport=True
+                      )
     
     # Provide GraphQL query
-    gql_query = gql(query)
+    gql_query : gql = gql(query)
     
     # Execute query on transport
     return client.execute(gql_query)
