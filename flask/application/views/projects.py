@@ -10,28 +10,28 @@ from application import app
 
 @app.route("/projects")
 def projects() -> None:
-    result : Dict = queryGithub
-    result = queryGithub(
-                 """
-                 query getPublicRepos {
-                   rateLimit {
-                     cost
-                     remaining
-                     resetAt
-                   }
-                   user(login: "techn0mancr") {
-                     repositories(first: 100, privacy: PUBLIC, orderBy: {field: CREATED_AT, direction: DESC}) {
-                       totalCount
-                       nodes {
-                         name
-                         description
-                         url
-                       }
-                     }
-                   }
-                 }
-                 """
-             )
+    result : Dict = queryGithub(
+                        f"""
+                        query getPublicRepos {{
+                          rateLimit {{
+                            cost
+                            remaining
+                            resetAt
+                          }}
+                          user(login: "{GITHUB_USERNAME}") {{
+                            repositories(first: 100, privacy: PUBLIC, orderBy: {{field: CREATED_AT, direction: DESC}}) {{
+                              totalCount
+                              nodes {{
+                                name
+                                description
+                                url
+                              }}
+                            }}
+                          }}
+                        }}
+                        """
+                 )
+    
     projects : Dict = result["user"]["repositories"]["nodes"]
     return render_template("projects.html", projects=projects)
 
