@@ -1,15 +1,18 @@
+""" Static typing-related imports """
 from typing import Dict
 
+""" Flask-related imports """
 from flask import render_template
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 
+""" nate.dev-related imports """
 from application.instances.secrets import GITHUB_USERNAME, GITHUB_TOKEN
-
 from application import app
 
 @app.route("/projects")
 def projects() -> None:
+    # Store query results from GitHub
     result : Dict = queryGithub(
                         f"""
                         query getPublicRepos {{
@@ -39,7 +42,9 @@ def projects() -> None:
                         """
                  )
     
+    
     try:
+        # Check if the query result is malformed
         projects : Dict = result["user"]["repositories"]["nodes"]
         return render_template("projects.html", projects=projects)
     except (AttributeError, KeyError):
@@ -49,10 +54,6 @@ def projects() -> None:
 
 """ Queries the given query string to Github's API v4. """
 def queryGithub(query : str) -> Dict:
-    if type(query) != str:
-        #TODO: error checking
-        pass
-    
     # Select transport with defined URL endpoint
     transport : RequestsHTTPTransport = RequestsHTTPTransport(
                                             url="https://api.github.com/graphql",
