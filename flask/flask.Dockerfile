@@ -18,5 +18,5 @@ USER nate.dev
 # Set the working directory
 WORKDIR /home/nate.dev
 
-# Run uwsgi
+# Run uWSGI
 CMD ["uwsgi", "application.ini"]
