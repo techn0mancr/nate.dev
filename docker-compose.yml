@@ -22,3 +22,14 @@ services:
     container_name: nginx
     ports:
       - "80:80"
+  
+  mongodb:
+    build:
+      context: ./mongodb
+      dockerfile: mongodb.Dockerfile
+    image: mongodb:nate.dev
+    container_name: mongodb
+    volumes:
+      - type: bind
+        source: ./mongodb/db
+        target: /data/db

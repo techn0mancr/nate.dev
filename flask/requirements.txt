@@ -1,4 +1,5 @@
 Flask
 gql
 markdown
+pymongo
 uwsgi
